@@ -1,29 +1,23 @@
 <template>
-  <section class="container">
+  <v-container>
+    <v-btn to="/login">로그인</v-btn>
     <div>
       <logo/>
-      <h1 class="title">
-        NUXT
-      </h1>
-      <h2 class="subtitle">
-        PWA Vue.js Application
-      </h2>
+      <h1 class="title"> NUXT </h1>
+      <h2 class="subtitle"> PWA Vue.js Application </h2>
       <div :class="['network',online ? 'online' : 'offline']">
         <div class="circle"></div>
         {{ online ? 'online' : 'offline' }}
       </div>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green" rel="noopener">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey" rel="noopener">GitHub</a>
-      </div>
     </div>
-  </section>
+  </v-container>
 </template>
 
 <script>
   import Logo from '~/components/Logo.vue'
 
   export default {
+    layout: 'vuetify',
     components: {Logo},
     data () {
       return {
@@ -50,7 +44,7 @@
     }
   }
 </script>
-
+<!--
 <style>
   .container {
     min-height: 100vh;
@@ -99,3 +93,4 @@
     background: red;
   }
 </style>
+-->

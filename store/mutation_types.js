@@ -1,0 +1,8 @@
+export const UID = 'UID'
+export const ERROR_STATE = 'ERROR_STATE'
+export const IS_AUTH = 'IS_AUTH'
+export const LOGIN = 'LOGIN'
+export const LOGOUT = 'LOGOUT'
+export const DATE = 'DATE'
+export const CHECK_PHONE_NUMBER = 'CHECK_PHONE_NUMBER'
+export const CHECKED_TICKET = 'CHECKED_TICKET'
