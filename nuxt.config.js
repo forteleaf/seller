@@ -43,5 +43,8 @@ module.exports = {
     '@nuxtjs/pwa',
     '@nuxtjs/axios'
   ],
-  plugins: ['@/plugins/vuetify.js']
+  plugins: ['@/plugins/vuetify.js'],
+  axios: {
+    baseURL: 'http://localhost:8000'
+  }
 }
