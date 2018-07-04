@@ -50,8 +50,7 @@ export default {
     },
     created() {
       // 로그인 되어 있으면 바로 매표확인 페이지로
-      if (this.$store.state.isAuth) this.$router.push('checkticket')
-      console.log('workd')
+      if (this.$store.state.isAuth) this.$router.push(`/checkedticket`)
     },
     mounted() {
       console.log(localStorage.getItem('userInfo'))
@@ -72,7 +71,7 @@ export default {
           this.$store.dispatch('LOGIN', form)
             .then( data => {
               this.data = data
-              this.$router.push('checkticket')
+              this.$router.push(`/checkedticket`)
             })
             .catch(({message}) => this.msg = message)
           }

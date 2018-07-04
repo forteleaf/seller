@@ -5,18 +5,20 @@ export const state = () => ({
   isAuth: false,
   userInfo: {
     level: 2,
-    username: 'username',
-    cust_code: '1003',
-    id: 'heyri001',
-    idx: 20,
-    mem_auth: '1003',
-    mem_email: 'galleryfocus@naver.com',
-    mem_name: '93뮤지엄',
-    mem_tel: '031-948-6677',
-    pw: '0319'
+    username: 'username'
+    // cust_code: '1003',
+    // id: 'heyri001',
+    // idx: 20,
+    // mem_auth: '1003',
+    // mem_email: 'galleryfocus@naver.com',
+    // mem_name: '93뮤지엄',
+    // mem_tel: '031-948-6677',
+    // pw: '0319'
   },
   tickets: []
 })
+
+export const getters = {}
 
 export const mutations = {
   [types.UID] (state, uid) {
@@ -65,12 +67,12 @@ export const actions = {
   },
   LOGOUT ({commit}) {
     commit('LOGOUT')
-    router.push('/')
+    this.$router.push('/')
   },
   // Procedure up_Select_TicketCheck
   // @cust_code, @date1, @date2, @ord_tel, @cust_name, @cocd, @itemCheck
   CHECK_PHONE_NUMBER ({commit}, {custCode, date1, date2, ordTel, custName, cocd}) {
-    return this.$axios.post(`${resourceHost}/api/checknumber`, {custCode, date1, date2, ordTel, custName, cocd})
+    return this.$axios.post(`/api/checknumber`, {custCode, date1, date2, ordTel, custName, cocd})
       .then(({data}) => {
         commit('CHECK_PHONE_NUMBER')
         console.log('CHECK_PHONE_NUMBER was ' + data)
@@ -82,7 +84,7 @@ export const actions = {
     // console.log('mamName :' + memName)
     // console.log('{memName} :' + {memName})
     console.log(this.state.userInfo.mem_name)
-    return this.$axios.post(`${resourceHost}/api/checkedticket`, {memName: this.state.userInfo.mem_name})
+    return this.$axios.post(`/api/checkedticket`, {memName: this.state.userInfo.mem_name})
       .then(({data}) => {
         commit('CHECKED_TICKET', data)
         console.log('CHECKED_TICKET : ' + data)

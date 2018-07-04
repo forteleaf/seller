@@ -6,8 +6,10 @@
   "private": true,
   "dependencies": {
     "@nuxtjs/axios": "^5.3.1",
+    "@nuxtjs/moment": "^1.0.0",
     "@nuxtjs/pwa": "latest",
-    "axios": "^0.18.0",
+    "moment": "^2.22.2",
+    "mssql": "^4.1.0",
     "nuxt": "latest",
     "vuetify": "^1.1.1"
   },

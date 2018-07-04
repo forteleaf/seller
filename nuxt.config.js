@@ -1,4 +1,5 @@
 module.exports = {
+  cache: true,
   /*
   ** Headers
   ** Common headers are already provided by @nuxtjs/pwa preset
@@ -23,14 +24,14 @@ module.exports = {
   */
   loading: { color: '#3B8070' },
   /*
-  ** Build configuration
-  */
-  /*
   ** Customize app manifest
   */
   manifest: {
     theme_color: '#3B8070'
   },
+  /*
+  ** Build configuration
+  */
   build: {
     vendor: [
       '@/plugins/vuetify.js'
@@ -41,10 +42,10 @@ module.exports = {
   */
   modules: [
     '@nuxtjs/pwa',
-    '@nuxtjs/axios'
+    ['@nuxtjs/moment', ['ko']],
+    ['@nuxtjs/axios', {
+      baseURL: 'http://localhost:8000'
+    }]
   ],
-  plugins: ['@/plugins/vuetify.js'],
-  axios: {
-    baseURL: 'http://localhost:8000'
-  }
+  plugins: ['@/plugins/vuetify.js']
 }
