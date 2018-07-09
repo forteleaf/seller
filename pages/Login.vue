@@ -18,11 +18,18 @@
         <v-btn class="success" @click="login" :disabled="!valid">로그인</v-btn>
       </v-form>
     </v-flex>
-        <v-btn class="success" @click="test" >test</v-btn>
-        <v-btn class="success" @click="testjson" >testjson</v-btn>
     <v-flex xs12 sm6 offset-sm3 mt-3>
-      {{this.$store.state.isAuth}}
-      <div> {{username}} // {{password}} // msg : {{msg}} // data: {{data}} </div>
+      <v-btn class="success" @click="test" >test</v-btn>
+      <v-btn class="success" @click="testjson" >testjson</v-btn>
+    </v-flex>
+    <v-flex xs12 sm6 offset-sm3 mt-3>
+      <v-alert
+        :value="alert"
+        type="error"
+      >
+        유요한 사용자가 아닙니다.
+      </v-alert>
+      <div> {{username}} // {{password}} // msg : {{msg}} // data: {{data}} // errorMsg: {{errorMsg}}</div>
     </v-flex>
   </v-layout>
   
@@ -32,15 +39,15 @@
 <script>
 export default {
     layout: 'vuetify',
-    props: ['day'],
     data () {
       return {
         valid: false,
+        alert: false,
         checkbox: false,
         username: '',
         password: '',
         msg: '',
-        error: '',
+        errorMsg: '',
         data: '',
         rules: {
           name: [ v => !!v || '이름을 입력하세요' ],
@@ -65,16 +72,16 @@ export default {
       // Todo: 로그인 버튼을 마구누르면 로그인 되는 현상
       login () {
         if (this.$refs.form.validate()) {
-          let form = new FormData()
-          form.append('id', this.username)
-          form.append('pwd', this.password)
-          this.$store.dispatch('LOGIN', form)
-            .then( data => {
-              this.data = data
-              this.$router.push(`/checkedticket`)
-            })
-            .catch(({message}) => this.msg = message)
           }
+        this.$store.dispatch('LOGIN', {username: this.username, password: this.password})
+          .then( data => {
+            if (data != undefined) {
+              this.alert = true
+            }else {
+              this.data = data
+            }
+          })
+          .catch(({message}) => this.errorMsg = message)
       },
       redirect() {
         const {search} = window.location

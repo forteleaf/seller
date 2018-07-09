@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
-    v-if="$store.state.userInfo.level < 3"
+    v-if="$store.state.isAuth"
     persistent
     :mini-variant="miniVariant"
     :clipped="clipped"
@@ -30,7 +30,7 @@
       :clipped-left="clipped"
       class="green darken-1"
     >
-      <v-toolbar-side-icon v-if="$store.state.userInfo.level > 3" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-side-icon v-if="$store.state.isAuth" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>

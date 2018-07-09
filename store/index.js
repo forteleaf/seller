@@ -4,8 +4,6 @@ import * as types from './mutation_types'
 export const state = () => ({
   isAuth: false,
   userInfo: {
-    level: 2,
-    username: 'username'
     // cust_code: '1003',
     // id: 'heyri001',
     // idx: 20,
@@ -18,7 +16,11 @@ export const state = () => ({
   tickets: []
 })
 
-export const getters = {}
+export const getters = {
+  memName () {
+    return state.userInfo.mem_name
+  }
+}
 
 export const mutations = {
   [types.UID] (state, uid) {
@@ -33,7 +35,8 @@ export const mutations = {
   [types.LOGIN] (state, data) {
     state.isAuth = true
     localStorage.setItem('userInfo', data)
-    state.userInfo = data
+    state.userInfo = data.data
+    this.$router.push(`/checkedticket`)
   },
   [types.LOGOUT] (state) {
     delete state.userInfo
@@ -45,23 +48,26 @@ export const mutations = {
   },
   [types.CHECKED_TICKET] (state, data) {
     state.tickets = data
+  },
+  [types.ERROR_STATE] (state, msg) {
+    state.errorMsg = msg
   }
 }
 
 export const actions = {
   // LOGIN get cust_code, id, idx, mem_auth, mem_email, mem_name, mem_tel, pw
-  LOGIN ({commit}, form) {
-    return this.$axios.post(`/api/auth`, form)
+  LOGIN ({commit}, {username, password}) {
+    // console.log({username, password})
+    return this.$axios.post(`/api/auth`, {username, password})
       .then(({data}) => {
-        if (data.length < 1) {
-          console.log('no exist user')
-          this.errState = '존재하지 않는 사용자 입니다'
-        } else {
+        if (data.result === 'valid') {
           commit('LOGIN', data)
-          // return data // return 을 통해서 methods 에 data 값을 던져주기
+        } else {
+          commit('ERROR_STATE', '유요한 사용자가 아닙니다.')
         }
       })
       .catch(err => {
+        this.errorMsg = err
         console.log('error :', err)
       })
   },
@@ -80,11 +86,11 @@ export const actions = {
   },
   // CHECKED_TICKET show used tickets when LOGIN
   // @mem_name is 사용자계정
-  CHECKED_TICKET ({commit}) {
+  CHECKED_TICKET ({commit}, {memName}) {
     // console.log('mamName :' + memName)
     // console.log('{memName} :' + {memName})
     console.log(this.state.userInfo.mem_name)
-    return this.$axios.post(`/api/checkedticket`, {memName: this.state.userInfo.mem_name})
+    return this.$axios.get(`/api/checkedticket`, {memName})
       .then(({data}) => {
         commit('CHECKED_TICKET', data)
         console.log('CHECKED_TICKET : ' + data)

@@ -1,6 +1,7 @@
 <template>
   <v-container>
     <v-btn to="/login">로그인</v-btn>
+    <v-btn @click="testGet">GET</v-btn>
     <div>
       <logo/>
       <h1 class="title"> NUXT </h1>
@@ -36,12 +37,18 @@
     methods: {
       _toggleNetworkStatus ({ type }) {
         this.online = type === 'online'
+      },
+      testGet() {
+        this.$axios.get('/user/ddasfasdfddd')
+          .then(res => {
+            console.log(res)
+          })
       }
     },
     destroyed () {
       window.removeEventListener('offline', this._toggleNetworkStatus)
       window.removeEventListener('online', this._toggleNetworkStatus)
-    }
+    },
   }
 </script>
 <!--

@@ -216,7 +216,7 @@ export default {
   created () {},
   mounted () {
     // show all what checked ticket list.
-    this.$store.dispatch('CHECKED_TICKET')
+    this.$store.dispatch('CHECKED_TICKET', {memName: this.$store.getters.memName})
       .then(data => {
         this.data = data
       })
