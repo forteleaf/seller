@@ -3,7 +3,7 @@
     <v-btn to="/login">로그인</v-btn>
     <v-btn @click="testGet">GET</v-btn>
     <div>
-      <logo/>
+      <!-- <logo/> -->
       <h1 class="title"> NUXT </h1>
       <h2 class="subtitle"> PWA Vue.js Application </h2>
       <div :class="['network',online ? 'online' : 'offline']">
@@ -41,7 +41,8 @@
       testGet() {
         this.$axios.get('/user/ddasfasdfddd')
           .then(res => {
-            console.log(res)
+            console.
+            g(res)
           })
       }
     },

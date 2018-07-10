@@ -60,7 +60,7 @@ export default {
       if (this.$store.state.isAuth) this.$router.push(`/checkedticket`)
     },
     mounted() {
-      console.log(localStorage.getItem('userInfo'))
+      // console.log(localStorage.getItem('userInfo'))
       // this.$store.state.userInfo = localStorage.getItem('userInfo')
       // let localUser = JSON.parse(localStorage.getItem('userInfo'))
       // console.log(this.localUser)

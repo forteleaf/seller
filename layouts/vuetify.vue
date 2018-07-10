@@ -20,7 +20,7 @@
         </v-card-title>
         <v-card-actions>
           <v-btn flat color="orange">Share</v-btn>
-          <v-btn flat color="orange">Explore</v-btn>
+          <v-btn flat color="orange" to="checkedticket">매표소</v-btn>
           <v-btn flat color="orange" @click="logout">Logout</v-btn>
         </v-card-actions>
       </v-card>
@@ -35,9 +35,7 @@
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
     <!-- <v-footer :fixed="fixed" app>
       <span>&copy; 2017</span>

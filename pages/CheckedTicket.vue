@@ -1,5 +1,31 @@
 <template>
 <div>
+  <v-tabs
+    dark
+    color="aqua"
+    v-model="currentTab"
+    align-with-title
+    class="elevation-1"
+  >
+    <v-tabs-slider color="yellow"></v-tabs-slider>
+    <v-tab
+      v-for="i in page.pageLastDay"
+      :href="'#tab-'+i"
+      :key="i"
+      @click="changeDate(i)"
+      target="뭐지"
+    >
+      {{ i }}일
+    </v-tab>
+  </v-tabs>
+  <v-layout 
+    v-touch="{
+      left: () => swipeDay('left'),
+      right: () => swipeDay('right')
+    }"
+    column fill-height
+  >
+
   <v-container text-md-center grid-list-md>
       <v-form>
         <v-layout row wrap align-center>
@@ -18,11 +44,10 @@
         </v-layout>
       </v-form>
   </v-container>
-
-  <v-content text-md-center grid-list-md>
+  <v-content text-md-center grid-list-md v-cloak>
     <v-data-table
     :headers="headers"
-    :items="items"
+    :items="$store.state.tickets"
     hide-actions
     class="elevation-1"
     item-key="idx"
@@ -70,6 +95,7 @@
     day : {{todayStart}}<br>
     day : {{todayEnd}}
   </v-content>
+  </v-layout>
 </div>
 </template>
 <script>
@@ -77,126 +103,40 @@
 export default {
   layout:'vuetify',
   name: 'checkedticket',
+  middleware: 'auth',
   data () {
     return {
+      currentTab: 'tab-',
+      page: {
+        day: this.$moment(),
+        page: this.$moment().date(),
+        pageLastDay: this.$moment().date(0).date()
+      },
       timeout: 333,
       loading: false,
       ord_tel: '',
       dialog: false,
-      user: null,
       msg: '',
       headers: [
         { text: "주문번호", value: 'ord_no', align: 'center'},
         { text: "예약번호", value: 'ord_tel', align: 'center'},
         { text: "사용체크", value: 'item_CheckDate', align: 'center'}
-      ],
-      items: [
-        {
-          "idx": 3591,
-          "ord_no": 20170401123800,
-          "item_code": 1059,
-          "item_Qty": 2,
-          "item_Cost": 10000,
-          "Item_DcPrice": 18000,
-          "Item_Price": 18000,
-          "item_Vat": 0,
-          "item_Total": 18000,
-          "item_Rate": 0.1,
-          "item_CheckDate": "2017-04-21 오후 2:32:49",
-          "item_RcpPrice": 14000,
-          "ord_tel": '1234'
-        },
-        {
-          "idx": 3592,
-          "ord_no": 20170401123904,
-          "item_code": 1004,
-          "item_Qty": 2,
-          "item_Cost": 7000,
-          "Item_DcPrice": 14000,
-          "Item_Price": 14000,
-          "item_Vat": 0,
-          "item_Total": 14000,
-          "item_Rate": 0,
-          "item_CheckDate": "",
-          "item_RcpPrice": 11200,
-          "ord_tel": '333'
-        },
-        {
-          "idx": 3593,
-          "ord_no": 20170401124047,
-          "item_code": 1002,
-          "item_Qty": 3,
-          "item_Cost": 8000,
-          "Item_DcPrice": 24000,
-          "Item_Price": 21818,
-          "item_Vat": 2182,
-          "item_Total": 24000,
-          "item_Rate": 0,
-          "item_CheckDate": "dd",
-          "item_RcpPrice": 14400,
-          "ord_tel": '1234'
-        },
-        {
-          "idx": 3594,
-          "ord_no": 20170401124135,
-          "item_code": 1004,
-          "item_Qty": 2,
-          "item_Cost": 7000,
-          "Item_DcPrice": 12200,
-          "Item_Price": 12200,
-          "item_Vat": 0,
-          "item_Total": 12200,
-          "item_Rate": 0.12,
-          "item_CheckDate": "",
-          "item_RcpPrice": 7600,
-          "ord_tel": '010-1234-5895'
-        },
-        {
-          "idx": 3595,
-          "ord_no": 20170401124135,
-          "item_code": 1073,
-          "item_Qty": 2,
-          "item_Cost": 12000,
-          "Item_DcPrice": 21000,
-          "Item_Price": 19091,
-          "item_Vat": 1909,
-          "item_Total": 21000,
-          "item_Rate": 0.12,
-          "item_CheckDate": "",
-          "item_RcpPrice": 16800
-        },
-        {
-          "idx": 3596,
-          "ord_no": 20170401124135,
-          "item_code": 1090,
-          "item_Qty": 1,
-          "item_Cost": 19800,
-          "Item_DcPrice": 17000,
-          "Item_Price": 15455,
-          "item_Vat": 1545,
-          "item_Total": 17000,
-          "item_Rate": 0.12,
-          "item_CheckDate": "",
-          "item_RcpPrice": 15400
-        },
-        {
-          "idx": 3598,
-          "ord_no": 20170401124940,
-          "item_code": 1009,
-          "item_Qty": 4,
-          "item_Cost": 7000,
-          "Item_DcPrice": 28000,
-          "Item_Price": 25455,
-          "item_Vat": 2545,
-          "item_Total": 28000,
-          "item_Rate": 0,
-          "item_CheckDate": "",
-          "item_RcpPrice": 22000
-        }
       ]
     }
   },
   methods: {
+    // swipeDay is change previous day or next day
+    swipeDay (stat) {
+      if ( stat == 'left'){
+        this.page.day = this.page.day.add(1,'d')
+        this.changeDate(this.page.day.date())
+      }
+      if ( stat == 'right'){
+        this.page.day = this.page.day.subtract(1,'d')
+        this.changeDate(this.page.day.date())
+      }
+      this.$nextTick(() => {this.currentTab = 'tab-'+this.page.page })
+    },
     // 전화번호를 입력해서 구매한 사람 내역을 확인
     checkNumber (number) {
       if (this.$refs.form.validate()) {
@@ -211,16 +151,31 @@ export default {
     submitTicketUse (item) {
       this.dialog = false
       console.log('prop.name : '+ item )
+    },
+    // changeDate reload ticket when click
+    changeDate(item){
+      this.loading = true
+      this.page.day = this.$moment().date(item)
+      this.page.page = item
+    
+      this.$store.dispatch('CHECKED_TICKET',{
+        memName: this.$store.getters.memName,
+        startDate: this.$moment().date(item).format('YYYY-MM-DD'),
+        endDate: this.$moment().date(item).format('YYYY-MM-DD')
+      }).then(
+        this.loading = false,
+      ).catch(({message}) => this.msg = message)
     }
   },
-  created () {},
   mounted () {
+    this.currentTab = 'tab-'+this.page.page
     // show all what checked ticket list.
-    this.$store.dispatch('CHECKED_TICKET', {memName: this.$store.getters.memName})
-      .then(data => {
-        this.data = data
-      })
-      .catch(({message}) => this.msg = message)
+    // console.log(this.$store.getters.memName)
+    this.$store.dispatch('CHECKED_TICKET',{
+      memName: this.$store.getters.memName,
+      startDate: this.page.day.format('YYYY-MM-DD'),
+      endDate: this.page.day.format('YYYY-MM-DD')
+    }).catch(({message}) => this.msg = message)
   },
   computed: {
     // change date format to checkdate in sql.

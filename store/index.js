@@ -1,4 +1,5 @@
 import * as types from './mutation_types'
+import { error } from 'util';
 
 // state 는 return {} 이므로 아래와 같이 작성
 export const state = () => ({
@@ -17,7 +18,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  memName () {
+  memName: (state) => {
     return state.userInfo.mem_name
   }
 }
@@ -47,6 +48,7 @@ export const mutations = {
     state.tickets = data
   },
   [types.CHECKED_TICKET] (state, data) {
+    if (!data) data = []
     state.tickets = data
   },
   [types.ERROR_STATE] (state, msg) {
@@ -86,14 +88,12 @@ export const actions = {
   },
   // CHECKED_TICKET show used tickets when LOGIN
   // @mem_name is 사용자계정
-  CHECKED_TICKET ({commit}, {memName}) {
-    // console.log('mamName :' + memName)
+  CHECKED_TICKET ({commit}, {memName, startDate, endDate}) {
+    // console.log('memName :' + memName)
     // console.log('{memName} :' + {memName})
-    console.log(this.state.userInfo.mem_name)
-    return this.$axios.get(`/api/checkedticket`, {memName})
+    return this.$axios.post(`/api/checkedticket`, {memName, startDate, endDate})
       .then(({data}) => {
-        commit('CHECKED_TICKET', data)
-        console.log('CHECKED_TICKET : ' + data)
+        commit('CHECKED_TICKET', data.data)
       })
   }
 }
