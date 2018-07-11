@@ -1,5 +1,4 @@
 import * as types from './mutation_types'
-import { error } from 'util';
 
 // state 는 return {} 이므로 아래와 같이 작성
 export const state = () => ({
@@ -35,13 +34,11 @@ export const mutations = {
   },
   [types.LOGIN] (state, data) {
     state.isAuth = true
-    localStorage.setItem('userInfo', data)
     state.userInfo = data.data
     this.$router.push(`/checkedticket`)
   },
   [types.LOGOUT] (state) {
     delete state.userInfo
-    localStorage.removeItem('userInfo')
     state.isAuth = false
   },
   [types.CHECK_PHONE_NUMBER] (state, data) {
@@ -58,9 +55,9 @@ export const mutations = {
 
 export const actions = {
   // LOGIN get cust_code, id, idx, mem_auth, mem_email, mem_name, mem_tel, pw
-  LOGIN ({commit}, {username, password}) {
+  async LOGIN ({commit}, {username, password}) {
     // console.log({username, password})
-    return this.$axios.post(`/api/auth`, {username, password})
+    return await this.$axios.post(`/api/auth`, {username, password})
       .then(({data}) => {
         if (data.result === 'valid') {
           commit('LOGIN', data)
@@ -69,8 +66,11 @@ export const actions = {
         }
       })
       .catch(err => {
+        if (err.response && err.reponse.status === 401) {
+          throw new Error('Bad credentials')
+        }
         this.errorMsg = err
-        console.log('error :', err)
+        throw err
       })
   },
   LOGOUT ({commit}) {
@@ -88,10 +88,10 @@ export const actions = {
   },
   // CHECKED_TICKET show used tickets when LOGIN
   // @mem_name is 사용자계정
-  CHECKED_TICKET ({commit}, {memName, startDate, endDate}) {
+  async CHECKED_TICKET ({commit}, {memName, startDate, endDate}) {
     // console.log('memName :' + memName)
     // console.log('{memName} :' + {memName})
-    return this.$axios.post(`/api/checkedticket`, {memName, startDate, endDate})
+    return await this.$axios.post(`/api/ticket/checked`, {memName, startDate, endDate})
       .then(({data}) => {
         commit('CHECKED_TICKET', data.data)
       })

@@ -19,10 +19,6 @@
       </v-form>
     </v-flex>
     <v-flex xs12 sm6 offset-sm3 mt-3>
-      <v-btn class="success" @click="test" >test</v-btn>
-      <v-btn class="success" @click="testjson" >testjson</v-btn>
-    </v-flex>
-    <v-flex xs12 sm6 offset-sm3 mt-3>
       <v-alert
         :value="alert"
         type="error"
@@ -70,10 +66,10 @@ export default {
     },
     methods: {
       // Todo: 로그인 버튼을 마구누르면 로그인 되는 현상
-      login () {
+      async login () {
         if (this.$refs.form.validate()) {
           }
-        this.$store.dispatch('LOGIN', {username: this.username, password: this.password})
+        await this.$store.dispatch('LOGIN', {username: this.username, password: this.password})
           .then( data => {
             if (data != undefined) {
               this.alert = true
@@ -94,34 +90,6 @@ export default {
           return qs
         }, {})
         this.$router.push(returnPath)
-      },
-      test () {
-        this.$http.get(`http://localhost:8000/api/hohooh/test`, {
-        }).then( response => {
-          console.log(response)
-        }).catch( err => {
-          console.log('err:'+err)
-        })
-      },
-      testjson () {
-        this.$http.get(`http://localhost:8000/api/test/json`, {
-        }).then( response => {
-          console.log(response)
-          this.msg = response.data
-        }).catch( err => {
-          console.log('err:'+err)
-        })
-      },
-      loginSuccessful (req) {
-        this.$router.push('checkticket')
-        if (!req.data.token) {
-          this.loginFailed()
-          return
-        }
-        localStorage.token = req.data.token
-        this.error = false
-
-        this.$router.replace(this.$route.query.redirect || '/authors')
       },
       loginFailed () {
         this.error = 'Login failed!'

@@ -45,7 +45,8 @@ module.exports = {
     ['@nuxtjs/moment', ['ko']],
     ['@nuxtjs/axios', {
       baseURL: 'http://localhost:8001'
-    }]
+    }],
+    '@nuxtjs/auth'
   ],
   plugins: ['@/plugins/vuetify.js']
 }
